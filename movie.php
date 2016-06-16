@@ -1,5 +1,5 @@
 <?php
-// var_dump($singlemovie);
+genreList();
 ?>
 
 <!DOCTYPE html>

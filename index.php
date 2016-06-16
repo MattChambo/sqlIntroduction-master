@@ -26,6 +26,9 @@ switch ($page) {
 	case 'movieForm':
 		include "movieForm.php";
 		break;
+	case 'add':
+		addMovie();
+		break;
 	case 'edit':
 		editMovie();
 		break;

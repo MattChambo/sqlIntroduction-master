@@ -1,8 +1,16 @@
 <?php
 
-include "database.php";
-$movies = getMovieList();
-$singlemovie = getSingleMovie(); 
+// include "database.php";
+include "Models/Database.php";
+include "Models/Movie.php";
+
+// instantiate an object for Movie
+$movie = new Movie;
+$movies = $movie->SelectAll();
+$singlemovie = $movie->find();
+
+// $movies = getMovieList();
+// $singlemovie = getSingleMovie(); 
 
 // if (isset($_GET['page'])) {
 // 	$page = $_GET['page'];

@@ -1,5 +1,5 @@
 <?php
-genreList();
+//genreList();
 ?>
 
 <!DOCTYPE html>

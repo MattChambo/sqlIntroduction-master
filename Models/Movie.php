@@ -2,6 +2,6 @@
 
 class Movie extends Database {
 
-	public $tablename = "movies";
-	public $columns = ['id', 'title', 'description', 'rating', 'duration', 'release_date'];
+	protected static $tablename = "movies";
+	protected static $columns = ['id', 'title', 'description', 'rating', 'duration', 'release_date'];
 }

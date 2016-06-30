@@ -10,7 +10,7 @@ class MoviesController extends Controller {
 
 		$id = isset($_GET['id']) ? ($_GET['id']) : null;
 		$singlemovie = new Movie($id);
-
+		
 		$view = new MoviesView(compact('singlemovie'));
 		$view->render();
 	}

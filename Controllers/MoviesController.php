@@ -9,8 +9,9 @@ class MoviesController extends Controller {
 	public function show() {
 
 		$id = isset($_GET['id']) ? ($_GET['id']) : null;
+
 		$singlemovie = new Movie($id);
-		
+
 		$view = new MoviesView(compact('singlemovie'));
 		$view->render();
 	}
@@ -31,8 +32,16 @@ class MoviesController extends Controller {
 	}
 
 	public function add() {
-		$view = new MovieFormView;
+		$singlemovie = new Movie;
+		$view = new MovieFormView(compact('singlemovie'));
 		$view->render();
+
+	}
+
+	public function insert() {
+
+		$movie = new Movie($_POST);
+		$movie->insert();
 
 	}
 }

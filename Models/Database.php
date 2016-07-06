@@ -3,6 +3,27 @@
 abstract class Database {
 	protected $dbc;
 
+	protected $data = [];
+
+		public function __construct($input = null) {
+			if(static::$columns) {
+				foreach (static::$columns as $column) {
+					$this->$column = null;
+				}
+			}
+
+			if(is_numeric($input)) {
+				$this->find($input);
+
+			}
+
+			if(is_array($input)) {
+				foreach (static::$columns as $column) {
+					$this->$column = $input[$column];
+				}
+			}
+		}
+
 	protected static function getDatabaseConnection() {
 
 		$dsn = "mysql:host=localhost;dbname=matts_db;charset=utf8";
@@ -50,7 +71,30 @@ abstract class Database {
 
 		$singlerecord = $statement->fetch(PDO::FETCH_ASSOC);
 
-		return $singlerecord;
+		$this->data = $singlerecord;
+		// var_dump($this->data);
+	}
+
+	public function insert() {
+
+		$dbc = static::getDatabaseConnection();
+
+		$columns = static::$columns;
+
+		unset($columns[array_search('id', $columns)]);
+
+		$sql = "INSERT INTO ". static::$tablename.
+		" (". implode(',', $columns).") VALUES (";
+		
+		$insertColumns =[];
+		foreach ($columns as $column) {
+			array_push($insertColumns, ":" .$column);
+		}
+
+
+		$sql .= implode(',', $insertColumns);	
+		$sql .=")";
+
 	}
 
 	public static function deleteMovie() {
@@ -70,4 +114,21 @@ abstract class Database {
 		header("location:./");
 
 	}
+
+	// public function __set($name, $value) {
+
+	// 	if(! in_array($name, static::$columns))
+	// 	{
+	// 	$this->data[$name] = $value;
+	// 	}
+	public function __get($name){
+
+		if(in_array($name, static::$columns)) {
+			return $this->data[$name];
+		} else {
+			echo "property '$name' is not found in the data variable";
+		}
+
+	}
+
 }

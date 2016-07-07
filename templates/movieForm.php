@@ -2,7 +2,7 @@
 
 if(isset($_GET['id'])){
 	$verb = "Edit";
-	$action = "./?page=edit";
+	$action = "./?page=update";
 }else {
 	$verb = "Add";
 	$action = "./?page=insert";

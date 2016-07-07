@@ -18,16 +18,27 @@ class MoviesController extends Controller {
 
 	public function edit() {
 		
-		$movie = new Movie;
-		$singlemovie = $movie->find();
+		$id = isset($_GET['id']) ? ($_GET['id']) : null;
+
+		$singlemovie = new Movie($id);
+
 
 		$view = new MovieFormView(compact('singlemovie'));
 		$view->render();
 	}
 
+	public function update() {
+
+		$movie = new Movie($_POST);
+		$movie->update();
+
+		header("location: ./?page=movie&id=" . $movie->id);
+
+	}
+
 	public function delete() {
 		
-		Movie::deleteMovie();
+		Movie::delete($_GET['id']);
 		header("location:./");
 	}
 
@@ -42,6 +53,8 @@ class MoviesController extends Controller {
 
 		$movie = new Movie($_POST);
 		$movie->insert();
+
+		header("Location: ./?page=movie&id=" . $movie->id);
 
 	}
 }

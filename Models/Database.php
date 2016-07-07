@@ -6,11 +6,11 @@ abstract class Database {
 	protected $data = [];
 
 		public function __construct($input = null) {
-			if(static::$columns) {
-				foreach (static::$columns as $column) {
-					$this->$column = null;
-				}
-			}
+			 if(static::$columns) {
+			 	foreach (static::$columns as $column) {
+			 		$this->$column = null;
+			 	}
+			 }
 
 			if(is_numeric($input)) {
 				$this->find($input);
@@ -95,9 +95,47 @@ abstract class Database {
 		$sql .= implode(',', $insertColumns);	
 		$sql .=")";
 
+		$statement = $dbc->prepare($sql);
+
+		foreach ($columns as $column) {
+			$statement->bindValue(":".$column, $this->$column);
+		}
+
+		$result = $statement->execute();
+
+		$this->id = $dbc->lastInsertId();
+
 	}
 
-	public static function deleteMovie() {
+	public function update() {
+
+		$dbc = static::getDatabaseConnection();
+
+		$columns = static::$columns;
+
+		unset($columns[array_search('id', $columns)]);
+
+		$sql = "UPDATE " . static::$tablename . " SET ";
+
+		$updateColumns = [];
+
+		foreach($columns as $column) {
+			array_push($updateColumns, $column. "=:" . $column);
+		}
+
+		$sql .= implode(",", $updateColumns)." WHERE id=:id";
+
+		$statement = $dbc->prepare($sql);
+
+		foreach (static::$columns as $column) {
+			$statement->bindValue(":".$column, $this->$column);
+		}
+
+		$result = $statement->execute();
+
+	}
+
+	public static function delete($id) {
 
 		$dbc = static::getDatabaseConnection();
 
@@ -122,11 +160,21 @@ abstract class Database {
 	// 	$this->data[$name] = $value;
 	// 	}
 	public function __get($name){
-
+		// When an object is read out in the browser
 		if(in_array($name, static::$columns)) {
 			return $this->data[$name];
 		} else {
 			echo "property '$name' is not found in the data variable";
+		}
+
+	}
+
+	public function __set($name, $value) {
+		// Setting values to the property of objects, initially is initially set to null by the construct function
+		if(in_array($name, static::$columns)) {
+			$this->data[$name] = $value;
+		} else {
+			echo "property '$name' is not set with a value";
 		}
 
 	}
